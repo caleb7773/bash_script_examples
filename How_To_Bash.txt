@@ -23,3 +23,61 @@ curl github.com > /dev/null 2>&1 || {echo "Error: no internet connection" >&2; r
 ping github.com -c 2 > /dev/null 2>&1 || {echo "Error: no internet connection" >&2; return 1; }    # Uses ping to determine the status of the internet connection
 
 
+#########################
+# Command return status #
+#########################
+
+which curl ; echo $?        # Returns "0" which is a successful output
+which curle ; echo $?       # Returns "1" which is a failed last command
+ping google.com ; echo $?   # Returns "0" if connected and "1" if not connected
+
+##############################################
+# Grabbing user flags at startup of a script #
+##############################################
+
+declare -a flags=(--help -a -g -h -f -g -I)         # Declares flags you can define (-e didn't work for some reason)
+
+if [[ $@ == '--help' ]] || [[ $@ == '' ]]; then     # If the users selects '--help' or nothing then     
+for flag in "${flags[@]}"; do                       # each item in the array declared by "flags" is listed
+	echo $flag
+done
+else
+	echo $@                                           # If a specific flag was picked that flag is echoed but a command could be run
+fi
+
+
+################################
+# Run a command or exit script #
+################################
+
+apt install upgrade -y || exit 1          # Attempts to run the command and if it fails it exits the script
+
+
+##########################
+# Sleep Commands in Bash #
+##########################
+
+sleep .5      # Sleeps for half of a second (seconds are default)
+sleep 1       # sleeps for 1 second
+sleep 1s      # sleeps for 1 second
+sleep 1m      # sleeps for 1 minute
+sleep 1h      # sleeps for 1 hour
+sleep 1d      # sleeps for 1 day
+
+
+####################################################
+# Echo words directly to the previous line of text #
+####################################################
+
+echo -n "8==>"     # Outputs regular text
+sleep 1s
+echo -n "..-"      # Outputs this directly after the previous text on the same line
+
+echo -n "."    # Outputs a single period
+sleep 1
+echo -n "."    # After a second it outputs another period next to the first
+sleep 1
+echo -n "."    # Drops a third period after the second one making a loading effect
+
+
+
