@@ -81,3 +81,9 @@ echo -n "."    # Drops a third period after the second one making a loading effe
 
 
 
+
+########################################
+# Multiple operations in the same line #
+########################################
+
+echo "$(( n=10, n=n+30 ))"        # Outputs 40
