@@ -8,6 +8,7 @@
 ############################################################
 # Testing if a program is installed on an operating system #
 ############################################################
+
 which curl > /dev/null 2>&1 || {echo "Curl is not installed" >&2; return 1; }
 
 1st - "which curl" - Checks for Curl in the linux programs
