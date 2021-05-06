@@ -1,0 +1,15 @@
+# Commands mostly tested on Kali Linux
+
+# Start every Bash Script with a "She-bang bin bash" this will tell linux this is a bash script
+#!/bin/bash
+
+
+
+
+# Testing if a program is installed on an operating system
+
+which curl > /dev/null 2>&1 || {echo "Curl is not installed" >&2; return 1; }
+
+1st - "which curl" - Checks for Curl in the linux programs
+2nd - " > /dev/null 2>&1" - outputs all errors and responses off screen to the /dev/null black hole
+3rd - " || " - OR command in Bash
