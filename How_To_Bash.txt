@@ -5,11 +5,20 @@
 
 
 
-
-# Testing if a program is installed on an operating system
-
+############################################################
+# Testing if a program is installed on an operating system #
+############################################################
 which curl > /dev/null 2>&1 || {echo "Curl is not installed" >&2; return 1; }
 
 1st - "which curl" - Checks for Curl in the linux programs
 2nd - " > /dev/null 2>&1" - outputs all errors and responses off screen to the /dev/null black hole
 3rd - " || " - OR command in Bash
+4th - " {echo "Curl is not installed >&2; return 1; } - Echos Text to screen if error is detected, if no error appears it will simply proceed with a blank return
+
+Conclusion: This line can be used to check for if a dependancy is installed and can be used to install it if it is found missing.
+Other Use Cases:
+which curl > /dev/null 2>&1 || {echo "apt install curl -y" >&2; return 1; }    # Installs curl if it is not already installed
+curl github.com > /dev/null 2>&1 || {echo "Error: no internet connection" >&2; return 1; }    # Uses curl to check the status of the internet connection
+ping github.com -c 2 > /dev/null 2>&1 || {echo "Error: no internet connection" >&2; return 1; }    # Uses ping to determine the status of the internet connection
+
+
