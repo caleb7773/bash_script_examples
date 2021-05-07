@@ -115,3 +115,11 @@ Text Format:         Foreground Text Color:      Background Color:
 		     37: White                   47: White
 		     
 		    
+
+################################
+# Incrementing Variable Number #
+################################
+
+((num++))      # This will increase the value of ${num} plus 1
+
+
