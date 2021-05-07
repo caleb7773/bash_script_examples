@@ -123,3 +123,14 @@ Text Format:         Foreground Text Color:      Background Color:
 ((num++))      # This will increase the value of ${num} plus 1
 
 
+
+########################
+# Check if File exists #
+########################
+
+if [[ -e filename.ext ]];
+  then
+    echo "file exists"            # If the requested filename exists then this is run
+  else 
+    echo "file does not exists"   # If the requested filename does not exist then this is run
+fi
