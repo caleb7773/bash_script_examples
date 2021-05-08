@@ -145,3 +145,15 @@ if [[ $(id -u) != 0 ]];                   # Checks for root permissions
   then
      echo "This needs to be run as root"  # Tells user to runs as root
 fi
+
+
+
+
+################
+# Ending loops #
+################
+
+while read line;
+  do
+     echo $line
+done < $input_file
