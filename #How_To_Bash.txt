@@ -134,3 +134,14 @@ if [[ -e filename.ext ]];
   else 
     echo "file does not exists"   # If the requested filename does not exist then this is run
 fi
+
+
+
+################################
+# Checking for SUDO Privileges #
+################################
+
+if [[ $(id -u) != 0 ]];                   # Checks for root permissions
+  then
+     echo "This needs to be run as root"  # Tells user to runs as root
+fi
