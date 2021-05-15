@@ -157,3 +157,96 @@ while read line;
   do
      echo $line
 done < $input_file
+
+
+
+
+
+################
+#  SSH CONFIG  #
+################
+
+
+Host bastion
+        HostName 199.247.20.143
+        User unconventionalderby
+        Port 22
+        IdentityFile ~/.ssh/id_rsa
+	
+Host mntn-out
+        HostName 10.99.2.17
+        User unconventionalderby
+        Port 22
+        ProxyJump bastion
+        IdentityFile ~/.ssh/id_rsa
+
+
+
+
+
+
+
+
+################
+#   IPTABLES   #
+################
+
+sudo iptables -t nat -nvL
+
+Chain PREROUTING (policy ACCEPT 300K packets, 15M bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+  178  7237 DNAT       udp  --  *      *       0.0.0.0/0            12.42.15.22          udp dpt:1194 to:10.100.0.107
+ 300K   15M LOG        all  --  *      *       0.0.0.0/0            0.0.0.0/0            LOG flags 0 level 4 prefix "dropped pre: "
+
+Chain INPUT (policy ACCEPT 7102 packets, 539K bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain OUTPUT (policy ACCEPT 72990 packets, 4776K bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain POSTROUTING (policy ACCEPT 72990 packets, 4776K bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+  178  7237 MASQUERADE  udp  --  *      eth1    0.0.0.0/0            0.0.0.0/0            udp dpt:1194
+
+Chain LOGGING (0 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 LOG        all  --  *      *       0.0.0.0/0            0.0.0.0/0            limit: avg 1/sec burst 5 LOG flags 0 level 4 prefix "IPTables-Denied: "
+    
+ 
+sudo iptables -nvL
+
+    Chain INPUT (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+ 205K  875M ACCEPT     all  --  *      *       0.0.0.0/0            0.0.0.0/0            state RELATED,ESTABLISHED
+ 7195  556K ACCEPT     icmp --  *      *       0.0.0.0/0            0.0.0.0/0           
+    3   180 ACCEPT     all  --  lo     *       0.0.0.0/0            0.0.0.0/0           
+    6   360 ACCEPT     tcp  --  eth1   *       0.0.0.0/0            0.0.0.0/0            state NEW tcp dpt:22
+ 291K   14M LOG        all  --  *      *       0.0.0.0/0            0.0.0.0/0            limit: avg 1/sec burst 5 LOG flags 0 level 4 prefix "IPTables-Denied-INPUT: "
+ 296K   15M REJECT     all  --  *      *       0.0.0.0/0            0.0.0.0/0            reject-with icmp-host-prohibited
+
+Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 ACCEPT     all  --  *      *       0.0.0.0/0            0.0.0.0/0            ctstate RELATED,ESTABLISHED
+  178  7237 ACCEPT     udp  --  eth0   eth1    0.0.0.0/0            0.0.0.0/0            udp dpt:1194
+    0     0 ACCEPT     all  --  eth1   eth0    0.0.0.0/0            0.0.0.0/0            state RELATED,ESTABLISHED
+    0     0 LOG        all  --  *      *       0.0.0.0/0            0.0.0.0/0            limit: avg 1/sec burst 5 LOG flags 0 level 4 prefix "IPTables-Denied-FWD: "
+    0     0 REJECT     all  --  *      *       0.0.0.0/0            0.0.0.0/0            reject-with icmp-host-prohibited
+
+Chain OUTPUT (policy ACCEPT 532K packets, 37M bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain ICMP_BLOCK (2 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 ICMP_BLOCK  icmp --  eth0   *       0.0.0.0/0            0.0.0.0/0            icmptype 17
+    0     0 ICMP_BLOCK  icmp --  eth0   *       0.0.0.0/0            0.0.0.0/0            icmptype 18
+    0     0 LOG        all  --  *      *       0.0.0.0/0            0.0.0.0/0            limit: avg 5/min burst 40 LOG flags 0 level 4 prefix "ICMP -- Reject -- eth0"
+    0     0 DROP       all  --  eth0   *       0.0.0.0/0            0.0.0.0/0           
+
+Chain LOGGING (0 references)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain PORT-SCAN-BLOCK (0 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 RETURN     tcp  --  eth0   *       0.0.0.0/0            0.0.0.0/0            tcp flags:0x17/0x04 limit: avg 1/sec burst 5
+    0     0 LOG        all  --  *      *       0.0.0.0/0            0.0.0.0/0            limit: avg 1/min burst 5 LOG flags 0 level 4 prefix "iptables PORT-SCAN deny:"
+    0     0 DROP       all  --  *      *       0.0.0.0/0            0.0.0.0/0           
