@@ -90,6 +90,16 @@ echo "$(( n=10, n=n+30 ))"        # Outputs 40
 
 
 
+##################################################
+# Create user with home directory and bash shell #
+##################################################
+
+
+adduser --home /home/vpnuser --shell /bin/bash vpnuser
+
+
+
+
 ##############################
 # Colors in bash font output #
 ##############################
