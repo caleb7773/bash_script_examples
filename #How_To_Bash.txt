@@ -260,3 +260,41 @@ Chain PORT-SCAN-BLOCK (0 references)
     0     0 RETURN     tcp  --  eth0   *       0.0.0.0/0            0.0.0.0/0            tcp flags:0x17/0x04 limit: avg 1/sec burst 5
     0     0 LOG        all  --  *      *       0.0.0.0/0            0.0.0.0/0            limit: avg 1/min burst 5 LOG flags 0 level 4 prefix "iptables PORT-SCAN deny:"
     0     0 DROP       all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+
+##############################
+# Ubuntu DHCP Server Startup #
+##############################
+sudo apt install isc-dhcp-server -y
+
+sudo rm -rf /etc/dhcp/dhcpd.conf
+
+sudo tee -a /etc/dhcp/dhcpd.conf << EOF
+# DHCP Server for Pine
+option domain-name "pop";
+option domain-name-servers 8.8.8.8, 1.1.1.1;
+default-lease-time 600;
+max-lease-time 7200;
+ddns-update-style  none;
+authoritative;
+subnet 192.168.70.0 netmask 255.255.255.0 {
+  range 192.168.70.2 192.168.254.240;
+  option subnet-mask 255.255.255.0;
+  option routers 192.168.70.1;
+  option broadcast-address 192.168.70.255;
+}
+EOF
+
+sudo rm -rf /etc/default/isc-dhcp-server
+sudo tee -a /etc/default/isc-dhcp-server << EOF
+INTERFACESv4="ens116s0"
+EOF
+
+sudo systemctl start isc-dhcp-server
+
+
+
+# Clearing out the DHCP Server #
+sudo rm -rf /etc/default/isc-dhcp-server
+sudo rm -rf /etc/dhcp/dhcpd.conf
+
